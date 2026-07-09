@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katalog Buket — Bloomie</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<section class="section" style="padding-bottom:20px">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Beranda</a> / Katalog</div>
+    <div class="section-head">
+      <span class="eyebrow">Katalog</span>
+      <h2 id="pageTitle">Semua Buket Bunga</h2>
+    </div>
+    <div class="chip-row" id="categoryChips"></div>
+    <div class="grid" id="productGrid"></div>
+    <div class="empty-state hidden" id="emptyState">
+      <img src="assets/icons/empty-vase.svg" alt="">
+      <p>Yah, buketnya nggak ketemu. Coba kata kunci lain ya.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="custom" style="background:var(--cream-soft); border-radius:40px; margin:0 20px 40px;">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Bikin Sendiri</span>
+      <h2>Custom Buket Kamu Sendiri</h2>
+      <p>Pilih bunga favoritmu, ukuran buket, dan tulis kartu ucapannya</p>
+    </div>
+
+    <div class="option-block">
+      <label>Pilih Bunga (klik untuk tambah, klik lagi buat nambah jumlah)</label>
+      <div class="flower-picker" id="customFlowerPicker"></div>
+    </div>
+
+    <div class="option-block">
+      <label>Ukuran Buket</label>
+      <div class="size-row" id="customSizeRow"></div>
+    </div>
+
+    <div class="option-block">
+      <label for="customCardMsg">Kartu Ucapan (opsional)</label>
+      <textarea id="customCardMsg" class="card-note" maxlength="180" placeholder="Tulis pesan manis untuk penerima bunga..."></textarea>
+      <div class="char-count"><span id="customCharCount">0</span>/180</div>
+    </div>
+
+    <div class="qty-stepper">
+      <button type="button" id="customQtyMinus">-</button>
+      <span id="customQtyVal">1</span>
+      <button type="button" id="customQtyPlus">+</button>
+    </div>
+
+    <p class="product-total">Total: <span id="customTotal">Rp35.000</span></p>
+    <button class="btn btn-primary" id="customAddBtn">Tambah ke Keranjang</button>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+  renderChrome('catalog');
+
+  const params = new URLSearchParams(location.search);
+  let activeCat = params.get('cat') || 'all';
+  let query = params.get('q') || '';
+
+  const chipsEl = document.getElementById('categoryChips');
+  function renderChips(){
+    chipsEl.innerHTML = CATEGORIES.map(c => `
+      <button class="chip ${c.id===activeCat?'active':''}" data-cat="${c.id}">
+        <img src="${c.icon}" alt=""><span>${c.name}</span>
+      </button>`).join('');
+    chipsEl.querySelectorAll('.chip').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        activeCat = btn.dataset.cat;
+        renderChips();
+        renderGrid();
+      });
+    });
+  }
+
+  const grid = document.getElementById('productGrid');
+  const emptyState = document.getElementById('emptyState');
+  const pageTitle = document.getElementById('pageTitle');
+
+  function renderGrid(){
+    let list = PRODUCTS.slice();
+    if(activeCat !== 'all') list = list.filter(p => p.category === activeCat);
+    if(query) {
+      const q = query.toLowerCase();
+      list = list.filter(p => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q));
+      pageTitle.textContent = `Hasil pencarian "${query}"`;
+    } else {
+      pageTitle.textContent = activeCat === 'all' ? 'Semua Buket Bunga' : (CATEGORIES.find(c=>c.id===activeCat)||{}).name;
+    }
+
+    emptyState.classList.toggle('hidden', list.length > 0);
+    grid.innerHTML = list.map(p => `
+      <div class="card">
+        <div class="card-media">
+          <a href="product.html?id=${p.id}"><img src="${p.img}" alt="${p.name}"></a>
+          <button class="wish-btn ${isWished(p.id)?'active':''}" data-id="${p.id}" aria-label="Wishlist">
+            <img src="assets/icons/heart-outline.svg" width="18" height="18" alt="">
+          </button>
+        </div>
+        <div class="card-body">
+          <span class="card-cat">${p.badge || (CATEGORIES.find(c=>c.id===p.category)||{}).name || ''}</span>
+          <a href="product.html?id=${p.id}"><h3 class="card-title">${p.name}</h3></a>
+          <span class="card-price">${formatIDR(p.price)}</span>
+        </div>
+        <div class="card-foot">
+          <a href="product.html?id=${p.id}" class="btn btn-primary btn-sm btn-block">Lihat Detail</a>
+        </div>
+      </div>`).join('');
+
+    grid.querySelectorAll('.wish-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const wished = toggleWishlist(btn.dataset.id);
+        btn.classList.toggle('active', wished);
+      });
+    });
+  }
+
+  renderChips();
+  renderGrid();
+
+  /* ---------- Custom bouquet builder ---------- */
+  const picker = document.getElementById('customFlowerPicker');
+  const selections = {}; // id -> qty
+  function renderPicker(){
+    picker.innerHTML = FLOWERS.map(f => `
+      <div class="flower-option ${selections[f.id]?'selected':''}" data-id="${f.id}">
+        <span class="qty-badge">${selections[f.id]||0}</span>
+        <img src="${f.img}" alt="${f.name}">
+        <span>${f.name}</span>
+        <span style="font-size:0.7rem;color:var(--ink-soft)">${formatIDR(f.pricePerStem)}/tangkai</span>
+      </div>`).join('');
+    picker.querySelectorAll('.flower-option').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const id = el.dataset.id;
+        selections[id] = (selections[id]||0) + 1;
+        renderPicker();
+        updateCustomTotal();
+      });
+    });
+  }
+  renderPicker();
+
+  const sizeRow = document.getElementById('customSizeRow');
+  let selectedSize = 'small';
+  sizeRow.innerHTML = SIZES.map(s => `<div class="size-pill ${s.id==='small'?'selected':''}" data-id="${s.id}">${s.label}</div>`).join('');
+  sizeRow.querySelectorAll('.size-pill').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      selectedSize = el.dataset.id;
+      sizeRow.querySelectorAll('.size-pill').forEach(p=>p.classList.remove('selected'));
+      el.classList.add('selected');
+      updateCustomTotal();
+    });
+  });
+
+  const cardMsg = document.getElementById('customCardMsg');
+  const charCount = document.getElementById('customCharCount');
+  cardMsg.addEventListener('input', ()=> charCount.textContent = cardMsg.value.length);
+
+  let customQty = 1;
+  const qtyVal = document.getElementById('customQtyVal');
+  document.getElementById('customQtyMinus').addEventListener('click', ()=>{
+    customQty = Math.max(1, customQty-1); qtyVal.textContent = customQty; updateCustomTotal();
+  });
+  document.getElementById('customQtyPlus').addEventListener('click', ()=>{
+    customQty += 1; qtyVal.textContent = customQty; updateCustomTotal();
+  });
+
+  function updateCustomTotal(){
+    const size = SIZES.find(s=>s.id===selectedSize);
+    let flowersCost = 0;
+    Object.entries(selections).forEach(([id,qty])=>{
+      const f = getFlower(id); if(f) flowersCost += f.pricePerStem * qty;
+    });
+    const base = CUSTOM_PRODUCT.price;
+    const unit = Math.round((base + flowersCost) * size.multiplier);
+    document.getElementById('customTotal').textContent = formatIDR(unit * customQty);
+  }
+  updateCustomTotal();
+
+  document.getElementById('customAddBtn').addEventListener('click', ()=>{
+    const flowerSelections = Object.entries(selections).map(([id,qty])=>({id,qty}));
+    if(flowerSelections.length === 0){
+      toast('Pilih minimal 1 jenis bunga dulu ya');
+      return;
+    }
+    addToCart({
+      productId:'custom',
+      sizeId:selectedSize,
+      flowerSelections,
+      cardMessage:cardMsg.value.trim(),
+      qty:customQty
+    });
+    // reset
+    for(const k in selections) delete selections[k];
+    renderPicker();
+    customQty = 1; qtyVal.textContent = 1;
+    cardMsg.value=''; charCount.textContent = 0;
+    updateCustomTotal();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar — Bloomie</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<section class="section">
+  <div class="form-card">
+    <img src="assets/icons/pixel-flower.svg" alt="" style="width:56px;margin:0 auto 12px">
+    <h2>Buat Akun Baru</h2>
+    <p class="sub">Biar belanja bunga makin gampang & bisa lacak pesananmu</p>
+    <div class="form-error" id="formError"></div>
+    <form id="registerForm">
+      <div class="field"><label>Nama Lengkap</label><input type="text" id="regName" required></div>
+      <div class="field"><label>Email</label><input type="email" id="regEmail" required></div>
+      <div class="field"><label>No. HP</label><input type="tel" id="regPhone" required></div>
+      <div class="field"><label>Password</label><input type="password" id="regPassword" required minlength="6"></div>
+      <button type="submit" class="btn btn-primary btn-block">Daftar</button>
+    </form>
+    <p class="form-foot">Sudah punya akun? <a href="login.html">Masuk di sini</a></p>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+  renderChrome('');
+  document.getElementById('registerForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim().toLowerCase();
+    const phone = document.getElementById('regPhone').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const errEl = document.getElementById('formError');
+    if(password.length < 6){
+      errEl.textContent = 'Password minimal 6 karakter ya.';
+      errEl.style.display = 'block';
+      return;
+    }
+    const res = registerUser({ name, email, password, phone });
+    if(!res.ok){
+      errEl.textContent = res.msg;
+      errEl.style.display = 'block';
+      return;
+    }
+    toast('Akun berhasil dibuat \u2713');
+    location.href = 'profile.html';
+  });
+</script>
+</body>
+</html>

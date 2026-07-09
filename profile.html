@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profil Saya — Bloomie</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<section class="section">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Beranda</a> / Profil</div>
+    <div class="profile-grid">
+      <div class="profile-nav">
+        <button class="active" data-tab="akun">Data Akun</button>
+        <button data-tab="alamat">Alamat Pengiriman</button>
+        <button id="logoutBtn" style="color:var(--pink-deep)">Keluar</button>
+      </div>
+
+      <div class="profile-panel">
+        <div id="tab-akun">
+          <h3 style="margin-bottom:18px">Data Akun</h3>
+          <div class="field"><label>Nama Lengkap</label><input type="text" id="pfName"></div>
+          <div class="field"><label>Email</label><input type="email" id="pfEmail" disabled></div>
+          <div class="field"><label>No. HP</label><input type="tel" id="pfPhone"></div>
+          <button class="btn btn-primary" id="saveAkunBtn">Simpan Perubahan</button>
+        </div>
+
+        <div id="tab-alamat" class="hidden">
+          <h3 style="margin-bottom:18px">Alamat Pengiriman Utama</h3>
+          <p style="color:var(--ink-soft);font-size:0.88rem;margin-bottom:16px">Alamat ini akan otomatis muncul saat kamu checkout.</p>
+          <div class="field"><label>Nama Penerima</label><input type="text" id="adRecipient"></div>
+          <div class="field"><label>No. HP Penerima</label><input type="tel" id="adPhone"></div>
+          <div class="field"><label>Alamat Lengkap</label><textarea id="adFull" rows="3"></textarea></div>
+          <div class="field"><label>Kota</label><input type="text" id="adCity"></div>
+          <div class="field"><label>Kode Pos</label><input type="text" id="adPostal"></div>
+          <div class="field"><label>Catatan untuk kurir</label><input type="text" id="adNotes"></div>
+          <button class="btn btn-primary" id="saveAlamatBtn">Simpan Alamat</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+  renderChrome('');
+  if(!requireAuth()) { /* redirected */ }
+  const user = getCurrentUser();
+
+  document.getElementById('pfName').value = user.name;
+  document.getElementById('pfEmail').value = user.email;
+  document.getElementById('pfPhone').value = user.phone || '';
+
+  document.getElementById('adRecipient').value = user.address.recipient || '';
+  document.getElementById('adPhone').value = user.address.phone || '';
+  document.getElementById('adFull').value = user.address.full || '';
+  document.getElementById('adCity').value = user.address.city || '';
+  document.getElementById('adPostal').value = user.address.postal || '';
+  document.getElementById('adNotes').value = user.address.notes || '';
+
+  const navBtns = document.querySelectorAll('.profile-nav button[data-tab]');
+  navBtns.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      navBtns.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-akun').classList.toggle('hidden', btn.dataset.tab !== 'akun');
+      document.getElementById('tab-alamat').classList.toggle('hidden', btn.dataset.tab !== 'alamat');
+    });
+  });
+
+  document.getElementById('saveAkunBtn').addEventListener('click', ()=>{
+    updateProfile({ name: document.getElementById('pfName').value.trim(), phone: document.getElementById('pfPhone').value.trim() });
+    toast('Data akun disimpan \u2713');
+  });
+
+  document.getElementById('saveAlamatBtn').addEventListener('click', ()=>{
+    updateAddress({
+      recipient: document.getElementById('adRecipient').value.trim(),
+      phone: document.getElementById('adPhone').value.trim(),
+      full: document.getElementById('adFull').value.trim(),
+      city: document.getElementById('adCity').value.trim(),
+      postal: document.getElementById('adPostal').value.trim(),
+      notes: document.getElementById('adNotes').value.trim(),
+    });
+    toast('Alamat disimpan \u2713');
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', logoutUser);
+</script>
+</body>
+</html>

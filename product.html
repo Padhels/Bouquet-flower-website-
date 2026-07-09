@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail Buket — Bloomie</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<div class="container">
+  <div class="breadcrumb"><a href="index.html">Beranda</a> / <a href="catalog.html">Katalog</a> / <span id="crumbName"></span></div>
+</div>
+
+<section class="container product-detail" id="productDetail"></section>
+
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Kamu mungkin juga suka</span>
+      <h2>Buket Serupa</h2>
+    </div>
+    <div class="grid" id="relatedGrid"></div>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+  renderChrome('catalog');
+  const params = new URLSearchParams(location.search);
+  const product = getProduct(params.get('id')) || PRODUCTS[0];
+  document.title = product.name + ' — Bloomie';
+  document.getElementById('crumbName').textContent = product.name;
+
+  const detailEl = document.getElementById('productDetail');
+  detailEl.innerHTML = `
+    <div class="product-gallery">
+      <img src="${product.img}" alt="${product.name}">
+    </div>
+    <div class="product-info">
+      ${product.badge ? `<span class="card-cat">${product.badge}</span>` : ''}
+      <h1>${product.name}</h1>
+      <div class="product-price" id="dynamicPrice">${formatIDR(product.price)}</div>
+      <p class="product-desc">${product.desc}</p>
+
+      <div class="option-block">
+        <label>Tambah / Ganti Bunga (opsional)</label>
+        <div class="flower-picker" id="flowerPicker"></div>
+      </div>
+
+      <div class="option-block">
+        <label>Ukuran Buket</label>
+        <div class="size-row" id="sizeRow"></div>
+      </div>
+
+      <div class="option-block">
+        <label for="cardMsg">Kartu Ucapan (opsional)</label>
+        <textarea id="cardMsg" class="card-note" maxlength="180" placeholder="Tulis pesan manis untuk penerima bunga..."></textarea>
+        <div class="char-count"><span id="charCount">0</span>/180</div>
+      </div>
+
+      <div class="qty-stepper">
+        <button type="button" id="qtyMinus">-</button>
+        <span id="qtyVal">1</span>
+        <button type="button" id="qtyPlus">+</button>
+      </div>
+
+      <p class="product-total">Total: <span id="totalPrice">${formatIDR(product.price)}</span></p>
+
+      <div class="action-row">
+        <button class="btn btn-primary btn-block" id="addToCartBtn">Tambah ke Keranjang</button>
+        <button class="wish-btn ${isWished(product.id)?'active':''}" id="wishBtn" style="position:static; border:2px solid var(--pink); width:52px;height:52px;flex-shrink:0;" aria-label="Wishlist">
+          <img src="assets/icons/heart-outline.svg" width="20" height="20" alt="">
+        </button>
+      </div>
+    </div>`;
+
+  /* base flowers already included in the bouquet, pre-selected at qty 1 (informational, no extra cost for the first stem set) */
+  const selections = {};
+  (product.flowers || []).forEach(id => selections[id] = 1);
+
+  const picker = document.getElementById('flowerPicker');
+  function renderPicker(){
+    picker.innerHTML = FLOWERS.map(f => `
+      <div class="flower-option ${selections[f.id]?'selected':''}" data-id="${f.id}">
+        <span class="qty-badge">${selections[f.id]||0}</span>
+        <img src="${f.img}" alt="${f.name}">
+        <span>${f.name}</span>
+      </div>`).join('');
+    picker.querySelectorAll('.flower-option').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const id = el.dataset.id;
+        selections[id] = (selections[id]||0) + 1;
+        if(selections[id] > 6) selections[id] = 0;
+        if(selections[id] === 0) delete selections[id];
+        renderPicker();
+        updateTotal();
+      });
+    });
+  }
+  renderPicker();
+
+  const sizeRow = document.getElementById('sizeRow');
+  let selectedSize = 'small';
+  sizeRow.innerHTML = SIZES.map(s => `<div class="size-pill ${s.id==='small'?'selected':''}" data-id="${s.id}">${s.label}</div>`).join('');
+  sizeRow.querySelectorAll('.size-pill').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      selectedSize = el.dataset.id;
+      sizeRow.querySelectorAll('.size-pill').forEach(p=>p.classList.remove('selected'));
+      el.classList.add('selected');
+      updateTotal();
+    });
+  });
+
+  const cardMsg = document.getElementById('cardMsg');
+  const charCount = document.getElementById('charCount');
+  cardMsg.addEventListener('input', ()=> charCount.textContent = cardMsg.value.length);
+
+  let qty = 1;
+  const qtyVal = document.getElementById('qtyVal');
+  document.getElementById('qtyMinus').addEventListener('click', ()=>{
+    qty = Math.max(1, qty-1); qtyVal.textContent = qty; updateTotal();
+  });
+  document.getElementById('qtyPlus').addEventListener('click', ()=>{
+    qty += 1; qtyVal.textContent = qty; updateTotal();
+  });
+
+  function currentUnitPrice(){
+    const size = SIZES.find(s=>s.id===selectedSize);
+    // extra flowers beyond the bouquet's default included set count toward price
+    const defaultSet = {};
+    (product.flowers||[]).forEach(id => defaultSet[id] = 1);
+    let extraCost = 0;
+    Object.entries(selections).forEach(([id,q])=>{
+      const extra = Math.max(0, q - (defaultSet[id]||0));
+      const f = getFlower(id);
+      if(f) extraCost += f.pricePerStem * extra;
+    });
+    return Math.round((product.price + extraCost) * size.multiplier);
+  }
+  function updateTotal(){
+    const unit = currentUnitPrice();
+    document.getElementById('dynamicPrice').textContent = formatIDR(unit);
+    document.getElementById('totalPrice').textContent = formatIDR(unit * qty);
+  }
+
+  document.getElementById('addToCartBtn').addEventListener('click', ()=>{
+    const flowerSelections = Object.entries(selections).map(([id,q])=>({id,qty:q}));
+    addToCart({
+      productId: product.id,
+      sizeId: selectedSize,
+      flowerSelections,
+      cardMessage: cardMsg.value.trim(),
+      qty
+    });
+  });
+
+  document.getElementById('wishBtn').addEventListener('click', function(){
+    const wished = toggleWishlist(product.id);
+    this.classList.toggle('active', wished);
+  });
+
+  /* related products */
+  const related = PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0,4);
+  document.getElementById('relatedGrid').innerHTML = related.map(p => `
+    <div class="card">
+      <div class="card-media">
+        <a href="product.html?id=${p.id}"><img src="${p.img}" alt="${p.name}"></a>
+        <button class="wish-btn ${isWished(p.id)?'active':''}" data-id="${p.id}" aria-label="Wishlist">
+          <img src="assets/icons/heart-outline.svg" width="18" height="18" alt="">
+        </button>
+      </div>
+      <div class="card-body">
+        <span class="card-cat">${p.badge||''}</span>
+        <a href="product.html?id=${p.id}"><h3 class="card-title">${p.name}</h3></a>
+        <span class="card-price">${formatIDR(p.price)}</span>
+      </div>
+      <div class="card-foot"><a href="product.html?id=${p.id}" class="btn btn-primary btn-sm btn-block">Lihat Detail</a></div>
+    </div>`).join('');
+  document.querySelectorAll('#relatedGrid .wish-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const wished = toggleWishlist(btn.dataset.id);
+      btn.classList.toggle('active', wished);
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pesanan Berhasil — Bloomie</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<section class="section center">
+  <div class="container" style="max-width:560px">
+    <img src="assets/icons/pixel-flower.svg" alt="" style="width:80px;margin:0 auto 18px;animation:bloom-bounce 2s ease-in-out infinite">
+    <h1>Yeay, pesanan kamu berhasil dibuat! \u{1F338}</h1>
+    <p style="color:var(--ink-soft);margin:14px 0">Nomor pesanan kamu: <strong id="orderId"></strong>. Kami akan segera menyiapkan buketnya begitu pembayaran dikonfirmasi.</p>
+    <div class="summary-box" style="text-align:left;margin:24px 0">
+      <div class="summary-row"><span>Total Pembayaran</span><span id="orderTotal"></span></div>
+      <div class="summary-row"><span>Metode</span><span id="orderMethod"></span></div>
+      <div class="summary-row"><span>Status</span><span class="order-status pending">Menunggu Pembayaran</span></div>
+    </div>
+    <div class="hero-ctas">
+      <a href="orders.html" class="btn btn-primary">Lihat Riwayat Pesanan</a>
+      <a href="catalog.html" class="btn btn-secondary">Lanjut Belanja</a>
+    </div>
+    <p style="margin-top:20px;font-size:0.9rem;color:var(--ink-soft)">Ada pertanyaan? <a href="#" id="waConfirmLink" style="color:var(--pink-deep);font-weight:700">Chat kami di WhatsApp</a></p>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+  renderChrome('orders');
+  const params = new URLSearchParams(location.search);
+  const orderId = params.get('id');
+  const order = getOrders().find(o => o.id === orderId);
+  if(order){
+    document.getElementById('orderId').textContent = order.id;
+    document.getElementById('orderTotal').textContent = formatIDR(order.total);
+    document.getElementById('orderMethod').textContent = order.payment.method === 'qris' ? 'QRIS' : ('VA ' + order.payment.bank);
+    const waMsg = `Halo Bloomie! Saya sudah order dengan nomor ${order.id}, mau konfirmasi pembayaran.`;
+    document.getElementById('waConfirmLink').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waMsg)}`;
+  } else {
+    document.querySelector('.section').innerHTML = '<div class="container center"><p>Pesanan tidak ditemukan.</p><a href="catalog.html" class="btn btn-primary" style="margin-top:14px">Kembali Belanja</a></div>';
+  }
+</script>
+</body>
+</html>

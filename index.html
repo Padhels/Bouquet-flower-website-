@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bloomie — Buket Bunga Segar untuk Setiap Momen</title>
+<meta name="description" content="Toko buket bunga online: rose, tulip, sunflower, lily, dan lainnya. Bisa custom bunga & kartu ucapan, bayar via QRIS/VA, diantar langsung ke rumahmu.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<header class="hero">
+  <div class="petals-holder" id="petalsHolder"></div>
+  <span class="hero-eyebrow">Buket bunga untuk hati yang manis</span>
+  <h1>Kirim <span>kebahagiaan</span> dalam rangkaian bunga favoritnya</h1>
+  <p class="lead">Pilih buket ready-to-order atau rangkai sendiri bunganya — rose, tulip, sunflower, sampai hydrangea. Tambahkan kartu ucapan personal, kami antar langsung ke rumahnya hari ini.</p>
+  <div class="hero-ctas">
+    <a href="catalog.html" class="btn btn-primary">Lihat Katalog</a>
+    <a href="catalog.html#custom" class="btn btn-secondary">Custom Buket Sendiri</a>
+  </div>
+  <div class="hero-flowers" aria-hidden="true">
+    <img src="assets/flowers/rose.svg" alt="">
+    <img src="assets/flowers/tulip.svg" alt="">
+    <img src="assets/flowers/sunflower.svg" alt="">
+    <img src="assets/flowers/lily.svg" alt="">
+    <img src="assets/flowers/hydrangea.svg" alt="">
+  </div>
+</header>
+
+<div class="pixel-strip" aria-hidden="true">
+  <img class="pixel-flower" src="assets/icons/pixel-flower.svg" alt="">
+  <img class="pixel-flower" src="assets/icons/pixel-flower.svg" alt="">
+  <img class="pixel-flower" src="assets/icons/pixel-flower.svg" alt="">
+  <img class="pixel-flower" src="assets/icons/pixel-flower.svg" alt="">
+  <img class="pixel-flower" src="assets/icons/pixel-flower.svg" alt="">
+  <img class="pixel-flower" src="assets/icons/pixel-flower.svg" alt="">
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Belanja berdasarkan momen</span>
+      <h2>Untuk siapa buketnya hari ini?</h2>
+    </div>
+    <div class="chip-row" id="categoryChips"></div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Favorit pelanggan</span>
+      <h2>Buket Paling Diminati</h2>
+      <p>Dipilih ribuan pelanggan untuk momen spesial mereka</p>
+    </div>
+    <div class="grid" id="featuredGrid"></div>
+    <div class="center" style="margin-top:32px">
+      <a href="catalog.html" class="btn btn-outline">Lihat Semua Buket</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--pink); border-radius:40px; margin:0 20px;">
+  <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;">
+    <div style="max-width:480px">
+      <h2>Mau bunga versi kamu sendiri?</h2>
+      <p style="color:var(--ink);opacity:.85;margin-top:8px">Pilih sendiri jenis bunga, ukuran buket, sampai tulisan di kartu ucapannya. Rangkaian bunga jadi lebih personal.</p>
+      <a href="catalog.html" class="btn btn-primary" style="margin-top:18px">Mulai Custom Buket</a>
+    </div>
+    <div class="hero-flowers" aria-hidden="true">
+      <img src="assets/flowers/gerbera.svg" alt="" style="width:56px;height:56px">
+      <img src="assets/flowers/daisy.svg" alt="" style="width:56px;height:56px">
+      <img src="assets/flowers/anyelir.svg" alt="" style="width:56px;height:56px">
+    </div>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+  renderChrome('home');
+  initPetals(document.getElementById('petalsHolder'), 10);
+
+  const chipsEl = document.getElementById('categoryChips');
+  chipsEl.innerHTML = CATEGORIES.map(c => `
+    <a href="catalog.html?cat=${c.id}" class="chip">
+      <img src="${c.icon}" alt="">
+      <span>${c.name}</span>
+    </a>`).join('');
+
+  const featured = PRODUCTS.filter(p => p.badge === 'Best Seller').slice(0,4);
+  const featuredGrid = document.getElementById('featuredGrid');
+  featuredGrid.innerHTML = featured.map(p => `
+    <div class="card">
+      <div class="card-media">
+        <a href="product.html?id=${p.id}"><img src="${p.img}" alt="${p.name}"></a>
+        <button class="wish-btn ${isWished(p.id)?'active':''}" data-id="${p.id}" aria-label="Wishlist">
+          <img src="assets/icons/heart-outline.svg" width="18" height="18" alt="">
+        </button>
+      </div>
+      <div class="card-body">
+        <span class="card-cat">${p.badge||''}</span>
+        <a href="product.html?id=${p.id}"><h3 class="card-title">${p.name}</h3></a>
+        <span class="card-price">${formatIDR(p.price)}</span>
+      </div>
+      <div class="card-foot">
+        <a href="product.html?id=${p.id}" class="btn btn-primary btn-sm btn-block">Lihat Detail</a>
+      </div>
+    </div>`).join('');
+
+  featuredGrid.querySelectorAll('.wish-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const wished = toggleWishlist(btn.dataset.id);
+      btn.classList.toggle('active', wished);
+    });
+  });
+</script>
+</body>
+</html>
