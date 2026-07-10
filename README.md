@@ -11,7 +11,7 @@ Website e-commerce buket bunga (target market cewek-cewek) — HTML, CSS, dan Ja
 - **Pembayaran** — pilihan QRIS & Virtual Account (BRI/Mandiri/BNI) — **mock/tampilan saja**, lihat catatan di bawah
 - **Login/Register** — akun tersimpan di localStorage
 - **Riwayat pesanan** & **Profil** (termasuk alamat pengiriman)
-- **Wishlist**, **Search**, tombol **Chat WhatsApp** ke 085601854064
+- **Wishlist**, **Search**, tombol **Chat WhatsApp** 
 - Custom bunga: rose, tulip, sunflower, lily, daisy, anyelir, gerbera, hydrangea, eucalyptus (ikon dibuat sendiri, bebas hak cipta)
 - UI pink/cream/lilac, tombol membulat, animasi pixel-flower & bounce, responsive mobile & desktop
 
