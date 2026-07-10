@@ -180,8 +180,8 @@ function navHTML(active){
   <div class="announce">Gratis ongkir untuk pemesanan di atas Rp300.000 \u2022 Antar hari ini kalau order sebelum jam 14.00</div>
   <nav class="navbar">
     <div class="nav-inner container">
-      <a href="index.html" class="logo"><img src="assets/icons/pixel-flower.svg" class="logo-pixel" alt=""> Bloomie</a>
-      <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><img src="assets/icons/menu.svg" width="26" height="26" alt=""></button>
+      <a href="index.html" class="logo"><img src="icon-pixel-flower.svg" class="logo-pixel" alt=""> Bloomie</a>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><img src="icon-menu.svg" width="26" height="26" alt=""></button>
       <ul class="nav-links" id="navLinks">
         <li><a href="index.html" class="${active==='home'?'active':''}">Beranda</a></li>
         <li><a href="catalog.html" class="${active==='catalog'?'active':''}">Katalog</a></li>
@@ -190,19 +190,19 @@ function navHTML(active){
       </ul>
       <div class="nav-actions">
         <form class="search-box" id="navSearchForm" role="search">
-          <img src="assets/icons/search.svg" width="18" height="18" alt="">
+          <img src="icon-search.svg" width="18" height="18" alt="">
           <input type="text" id="navSearchInput" placeholder="Cari buket bunga..." aria-label="Cari">
         </form>
         <a href="wishlist.html" class="icon-btn" aria-label="Wishlist">
-          <img src="assets/icons/heart-outline.svg" width="20" height="20" alt="">
+          <img src="icon-heart-outline.svg" width="20" height="20" alt="">
           <span class="badge hidden" id="wishBadge">0</span>
         </a>
         <a href="cart.html" class="icon-btn" aria-label="Keranjang">
-          <img src="assets/icons/cart.svg" width="20" height="20" alt="">
+          <img src="icon-cart.svg" width="20" height="20" alt="">
           <span class="badge hidden" id="cartBadge">0</span>
         </a>
         <a href="${user? 'profile.html':'login.html'}" class="icon-btn" aria-label="${user?'Profil':'Masuk'}">
-          <img src="assets/icons/user.svg" width="20" height="20" alt="">
+          <img src="icon-user.svg" width="20" height="20" alt="">
         </a>
       </div>
     </div>
@@ -214,7 +214,7 @@ function footerHTML(){
   <footer class="footer">
     <div class="container footer-grid">
       <div>
-        <a href="index.html" class="logo"><img src="assets/icons/pixel-flower.svg" class="logo-pixel" alt=""> Bloomie</a>
+        <a href="index.html" class="logo"><img src="icon-pixel-flower.svg" class="logo-pixel" alt=""> Bloomie</a>
         <p style="margin-top:10px;max-width:280px;color:var(--ink-soft)">Buket bunga segar untuk setiap momen manis kamu — dirangkai dengan cinta, diantar dengan cepat.</p>
       </div>
       <div>
@@ -233,7 +233,7 @@ function footerHTML(){
     <p class="footer-bottom">\u00A9 ${new Date().getFullYear()} Bloomie. Dibuat dengan sepenuh hati untuk para pecinta bunga.</p>
   </footer>
   <a href="https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Halo Bloomie! Saya mau tanya soal buket bunga.')}" target="_blank" rel="noopener" class="wa-float" aria-label="Chat WhatsApp">
-    <img src="assets/icons/whatsapp.svg" width="30" height="30" alt="">
+    <img src="icon-whatsapp.svg" width="30" height="30" alt="">
   </a>`;
 }
 

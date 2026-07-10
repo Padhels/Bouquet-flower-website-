@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pesanan Berhasil — Bloomie</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -12,7 +12,7 @@
 
 <section class="section center">
   <div class="container" style="max-width:560px">
-    <img src="assets/icons/pixel-flower.svg" alt="" style="width:80px;margin:0 auto 18px;animation:bloom-bounce 2s ease-in-out infinite">
+    <img src="icon-pixel-flower.svg" alt="" style="width:80px;margin:0 auto 18px;animation:bloom-bounce 2s ease-in-out infinite">
     <h1>Yeay, pesanan kamu berhasil dibuat! \u{1F338}</h1>
     <p style="color:var(--ink-soft);margin:14px 0">Nomor pesanan kamu: <strong id="orderId"></strong>. Kami akan segera menyiapkan buketnya begitu pembayaran dikonfirmasi.</p>
     <div class="summary-box" style="text-align:left;margin:24px 0">
@@ -30,8 +30,8 @@
 
 <div id="footer-placeholder"></div>
 
-<script src="js/data.js"></script>
-<script src="js/app.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
 <script>
   renderChrome('orders');
   const params = new URLSearchParams(location.search);

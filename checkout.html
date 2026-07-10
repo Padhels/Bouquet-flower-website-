@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Checkout — Bloomie</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -39,7 +39,7 @@
         <p style="font-size:0.8rem;color:var(--ink-soft);margin-top:10px">Transfer sesuai nominal total belanja ke nomor Virtual Account di atas melalui ATM/mobile banking.</p>
       </div>
       <div class="va-box hidden" id="qrisBox">
-        <img src="assets/icons/qris-mock.svg" alt="QRIS" style="width:140px;margin:0 auto 10px">
+        <img src="icon-qris-mock.svg" alt="QRIS" style="width:140px;margin:0 auto 10px">
         <p style="font-size:0.8rem;color:var(--ink-soft)">Scan QRIS ini dengan aplikasi e-wallet atau mobile banking kamu.</p>
       </div>
     </div>
@@ -57,8 +57,8 @@
 
 <div id="footer-placeholder"></div>
 
-<script src="js/data.js"></script>
-<script src="js/app.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
 <script>
   renderChrome('cart');
   if(!requireAuth()) { /* redirected to login */ }
