@@ -38,25 +38,25 @@ const CATEGORIES = [
 const PRODUCTS = [
   {
     id:'p1', name:'Ruby Rose Bliss', category:'romance',
-    img:'bouquet-rose-red.svg', price:185000,
+    img:'bouquet-rose-red.jpg', price:185000,
     desc:'Buket mawar merah premium, simbol cinta yang berani. Dibungkus kertas krep lembut dan pita satin pink.',
     flowers:['rose','eucalyptus'], badge:'Best Seller'
   },
   {
     id:'p2', name:'Blush Petal Dream', category:'romance',
-    img:'bouquet-rose-pink.svg', price:165000,
+    img:'bouquet-rose-pink.jpg', price:165000,
     desc:'Rangkaian mawar pink lembut dipadu eucalyptus, cocok untuk hadiah romantis maupun self-love.',
     flowers:['rose','eucalyptus','daisy'], badge:null
   },
   {
     id:'p3', name:'Tulip Cloud Charm', category:'birthday',
-    img:'bouquet-tulip.svg', price:175000,
+    img:'bouquet-tulip.jpg', price:175000,
     desc:'Tulip warna-warni yang ceria, sempurna untuk merayakan momen bahagia si dia.',
     flowers:['tulip','daisy'], badge:'New'
   },
   {
     id:'p4', name:'Sunny Golden Hug', category:'graduation',
-    img:'bouquet-sunflower.svg', price:150000,
+    img:'bouquet-sunflower.jpg', price:150000,
     desc:'Sunflower cerah penuh semangat, cocok untuk hadiah wisuda atau ucapan semangat.',
     flowers:['sunflower','gerbera'], badge:null
   },
@@ -68,43 +68,43 @@ const PRODUCTS = [
   },
   {
     id:'p6', name:'Ivory Lily Grace', category:'wedding',
-    img:'bouquet-lily-white.svg', price:210000,
+    img:'bouquet-lily-white.jpg', price:210000,
     desc:'Lily putih elegan dengan sentuhan mawar pink, cocok untuk acara pernikahan atau ucapan duka cita penuh hormat.',
     flowers:['lily','rose','eucalyptus'], badge:null
   },
   {
     id:'p7', name:'Daisy Sunshine Pop', category:'birthday',
-    img:'bouquet-daisy.svg', price:120000,
+    img:'bouquet-daisy.jpg', price:120000,
     desc:'Buket daisy putih segar, simpel tapi manis, cocok untuk hadiah harian.',
     flowers:['daisy','gerbera'], badge:null
   },
   {
     id:'p8', name:'Anniversary Deep Love', category:'anniversary',
-    img:'bouquet-anniversary.svg', price:225000,
+    img:'bouquet-anniversary.jpg', price:225000,
     desc:'Mawar merah dalam jumlah banyak dengan aksen putih, buket klasik untuk anniversary spesial.',
     flowers:['rose','daisy'], badge:'Best Seller'
   },
   {
     id:'p9', name:'Grad Sunflower Cheer', category:'graduation',
-    img:'bouquet-graduation.svg', price:160000,
+    img:'bouquet-graduation.jpg', price:160000,
     desc:'Sunflower & gerbera oranye cerah dengan lily putih, ucapan selamat wisuda yang meriah.',
     flowers:['sunflower','gerbera','lily'], badge:null
   },
   {
     id:'p10', name:'Lilac Wedding Charm', category:'wedding',
-    img:'bouquet-wedding.svg', price:230000,
+    img:'bouquet-wedding.jpg', price:230000,
     desc:'Lily putih & hydrangea lilac lembut, buket pengantin yang syahdu dan elegan.',
     flowers:['lily','hydrangea','eucalyptus'], badge:'New'
   },
   {
     id:'p11', name:'Anyelir Sweetheart', category:'anniversary',
-    img:'bouquet-rose-pink.svg', price:135000,
+    img:'bouquet-rose-pink.jpg', price:135000,
     desc:'Anyelir pink ruffled yang manis, tahan lama dan cocok untuk hadiah harian penuh kasih.',
     flowers:['anyelir','daisy'], badge:null
   },
   {
     id:'p12', name:'Tulip Romance Duo', category:'romance',
-    img:'bouquet-tulip.svg', price:180000,
+    img:'bouquet-tulip.jpg', price:180000,
     desc:'Tulip merah muda dipadu mawar, perpaduan romantis yang jarang ditemukan.',
     flowers:['tulip','rose'], badge:null
   },
